@@ -2,13 +2,11 @@ module Norma43
   
   DATE_FORMAT = '%y%m%d'
   
-  def self.read(path_to_file, encoding="iso-8859-1")
+  def self.read(file)
     data = Hash.new
     data[:movements] = Array.new
     
-    file = File.open(path_to_file, "r") 
-    file.each do |encoded_line|
-      line = Iconv.iconv("UTF-8", "#{encoding}", encoded_line).to_s
+    file.each_line do |line|
       code = line[0..1]
       data[:info] = self.parse_header(line) if code == '11'
       data[:movements] << self.parse_movement_main(line) if code == '22'
