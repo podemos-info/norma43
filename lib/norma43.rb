@@ -47,7 +47,8 @@ module Norma43
         :reference_1 => line[52..63],
         :reference_2 => line[64..79].strip,
         :amount => parse_amount(line[28..41], line[27].chr),
-        :office => line[6..9]
+        :office => line[6..9],
+        :concept => ""
       }
     end
 
