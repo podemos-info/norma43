@@ -1,6 +1,3 @@
-require "iconv"
-require 'date'
-
 module Norma43
   
   DATE_FORMAT = '%y%m%d'
@@ -16,7 +13,10 @@ module Norma43
       data[:info] = self.parse_header(line) if code == '11'
       data[:movements] << self.parse_movement_main(line) if code == '22'
       #TODO support multiple '23' lines (there may be up to 5)
-      data[:movements].last.merge!(self.parse_movement_optional(line)) if code == '23'
+      if code == '23'
+        line = self.parse_movement_optional(line)
+        data[:movements].last[:concept] += line
+      end
       #TODO check amount values against those on record 33 
       data[:info].merge!(self.parse_end(line)) if code == '33'
       #TODO parse record 88, end of file
@@ -54,7 +54,7 @@ module Norma43
     end
 
     def self.parse_movement_optional(line)
-      {:concept => line[4, 79].strip}
+      line[4, 79].strip
     end
 
     def self.parse_end(line)
