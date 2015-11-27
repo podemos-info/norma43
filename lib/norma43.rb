@@ -7,6 +7,7 @@ module Norma43
     data[:movements] = Array.new
     
     file.each_line do |line|
+      line = line.force_encoding("utf-8")
       code = line[0..1]
       data[:info] = self.parse_header(line) if code == '11'
       data[:movements] << self.parse_movement_main(line) if code == '22'
